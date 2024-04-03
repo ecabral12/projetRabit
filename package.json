@@ -1,0 +1,15 @@
+{
+  "name": "projetrabit",
+  "version": "1.0.0",
+  "description": "a simple messaging app using RabbitMQ",
+  "main": "index.js",
+  "scripts": {
+    "test": "dev"
+  },
+  "author": "elvis Djahnick",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "express": "^4.19.2"
+  }
+}
