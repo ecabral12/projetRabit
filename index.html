@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Message App</title>
+</head>
+<body>
+  <h1>Message App</h1>
+
+  <form id="messageForm">
+    <input type="text" id="messageInput" placeholder="Enter your message">
+    <button type="submit">Send</button>
+  </form>
+
+  <div id="messageList"></div>
+
+  <script src="https://cdn.socket.io/4.3.1/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    const messageForm = document.getElementById('messageForm');
+    const messageInput = document.getElementById('messageInput');
+    const messageList = document.getElementById('messageList');
+
+    messageForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const message = messageInput.value;
+
+      // Envoyer un message au serveur
+      socket.emit('messageFromClient', message);
+
+      messageInput.value = '';
+    });
+
+    // Recevoir un message du serveur et l'afficher sur la page
+    socket.on('message', (message) => {
+      const messageItem = document.createElement('p');
+      messageItem.textContent = message;
+      messageList.appendChild(messageItem);
+    });
+  </script>
+</body>
+</html>

@@ -1,23 +1,32 @@
 const express = require("express");
-//const cors = require("cors");
+const http = require('http');
+const socketIo = require('socket.io');
 const app = express();
-const { sendMessage, consumeMessages } = require('./routes/messages.js'); // Import your messaging functions
-
-//app.use(cors())
+const server = http.createServer(app);
+const io = socketIo(server);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to the application backend." });
+  res.sendFile(__dirname + '/index.html');
 });
 
-const messagesRoutes = require('./routes/messages.js');
+io.on('connection', (socket) => {
+  console.log('A user connected');
 
-app.use("/api/messages",messagesRoutes)
+  // Recevoir un message du client et l'afficher dans la console
+  socket.on('messageFromClient', (message) => {
+    console.log('Message from client:', message);
+    io.emit('message', message); // Envoyer le message Ã  tous les clients
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
-
